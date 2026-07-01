@@ -35,12 +35,20 @@ Console.WriteLine("Opening browser to authenticate (InteractiveBrowserCredential
 
 try
 {
-    var credential = new InteractiveBrowserCredential();
-    var tokenRequestContext = new TokenRequestContext(new[] { "https://cognitiveservices.azure.com/.default" });
-    var accessToken = await credential.GetTokenAsync(tokenRequestContext);
+    // var credential = new InteractiveBrowserCredential();
+    //var credential = new DeviceCodeCredential();
+    //var tokenRequestContext = new TokenRequestContext(new[] { "https://cognitiveservices.azure.com/.default" });
+    //var accessToken = await credential.GetTokenAsync(tokenRequestContext);
 
     using HttpClient http = new HttpClient();
-    http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken.Token);
+
+    // Add your copied key directly to the headers
+    http.DefaultRequestHeaders.Add("api-key", "9d2Zy2DNM08N2woThrFcozY24LdLKkOpOiQZp4I5OGvr3iUPg5BxJQQJ99CGACYeBjFXJ3w3AAAAACOGb4wN");
+
+    Console.WriteLine("\n--- Chat Started (type 'exit' to quit) ---");
+
+    //using HttpClient http = new HttpClient();
+    //http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken.Token);
 
     Console.WriteLine("\n--- Chat Started (type 'exit' to quit) ---");
 
@@ -51,9 +59,14 @@ try
         if (string.IsNullOrWhiteSpace(input)) continue;
         if (input.Equals("exit", StringComparison.OrdinalIgnoreCase)) break;
 
+        //var payload = new
+        //{
+        //    messages = new[] { new { role = "user", content = input } }
+        //};
+        // ✅ New Responses API format
         var payload = new
         {
-            messages = new[] { new { role = "user", content = input } }
+            input = new[] { new { role = "user", content = input } }
         };
 
         string json = JsonSerializer.Serialize(payload);
